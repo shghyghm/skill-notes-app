@@ -1,6 +1,7 @@
 {
-  "buildCommand": "npm install --prefix frontend && npm run build --prefix frontend",
-  "outputDirectory": "frontend/dist",
+  "buildCommand": "npm install && npm run build",
+  "outputDirectory": "dist",
+  "rootDirectory": "frontend",
   "env": {
     "REACT_APP_API_URL": "https://skill-notes-api.onrender.com"
   }
