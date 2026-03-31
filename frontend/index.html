@@ -34,7 +34,7 @@
     // Determine API URL based on environment
     const API = window.location.hostname === "localhost" 
       ? "http://localhost:8000"
-      : `${window.location.protocol}//${window.location.hostname}:8000`;
+      : "https://skill-notes-api.onrender.com";
     
     let currentToken = localStorage.getItem("token");
     let selectedSkill = null;
