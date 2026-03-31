@@ -5,6 +5,9 @@ const API = axios.create({
   withCredentials: true,
 });
 
+// Debug log
+console.log("API Base URL:", API.defaults.baseURL);
+
 export const setAuthToken = (token) => {
   if (token) {
     API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
