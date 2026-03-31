@@ -1,7 +1,16 @@
 import axios from "axios";
 
+const getBaseURL = () => {
+  // در development محلی
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return 'http://localhost:8000';
+  }
+  // در production (Vercel)
+  return 'https://skill-notes-api.onrender.com';
+};
+
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8000",
+  baseURL: getBaseURL(),
 });
 
 export const setAuthToken = (token) => {
