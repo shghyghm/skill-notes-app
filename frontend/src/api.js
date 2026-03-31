@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://skill-notes-api.onrender.com",
-  withCredentials: true,
+  baseURL: "https://skill-notes-app.onrender.com"
 });
 
 // Debug log with timestamp
@@ -10,9 +9,9 @@ console.log("API Base URL:", API.defaults.baseURL, "at", new Date().toISOString(
 
 export const setAuthToken = (token) => {
   if (token) {
-    API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    API.defaults.headers.common["token"] = token;
   } else {
-    delete API.defaults.headers.common["Authorization"];
+    delete API.defaults.headers.common["token"];
   }
 };
 
@@ -37,7 +36,7 @@ export async function login(data) {
 export async function getSkills(token) {
   try {
     const res = await API.get("/skills/", {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { token: token },
     });
     return res.data;
   } catch (error) {
@@ -50,7 +49,7 @@ export async function createSkill(title, token) {
     const res = await API.post(
       "/skills/",
       { title },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { token: token } }
     );
     return res.data;
   } catch (error) {
@@ -63,7 +62,7 @@ export async function updateSkill(skillId, title, token) {
     const res = await API.put(
       `/skills/${skillId}/`,
       { title },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { token: token } }
     );
     return res.data;
   } catch (error) {
@@ -74,7 +73,7 @@ export async function updateSkill(skillId, title, token) {
 export async function deleteSkill(skillId, token) {
   try {
     const res = await API.delete(`/skills/${skillId}/`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { token: token },
     });
     return res.data;
   } catch (error) {
@@ -85,7 +84,7 @@ export async function deleteSkill(skillId, token) {
 export async function getNotes(skillId, token) {
   try {
     const res = await API.get(`/skills/${skillId}/notes/`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { token: token },
     });
     return res.data;
   } catch (error) {
@@ -98,7 +97,7 @@ export async function createNote(skillId, content, token) {
     const res = await API.post(
       `/skills/${skillId}/notes/`,
       { content },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { token: token } }
     );
     return res.data;
   } catch (error) {
@@ -111,7 +110,7 @@ export async function updateNote(skillId, noteId, content, token) {
     const res = await API.put(
       `/skills/${skillId}/notes/${noteId}/`,
       { content },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { token: token } }
     );
     return res.data;
   } catch (error) {
@@ -122,7 +121,7 @@ export async function updateNote(skillId, noteId, content, token) {
 export async function deleteNote(skillId, noteId, token) {
   try {
     const res = await API.delete(`/skills/${skillId}/notes/${noteId}/`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { token: token },
     });
     return res.data;
   } catch (error) {
