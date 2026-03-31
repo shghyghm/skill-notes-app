@@ -5,8 +5,8 @@ const API = axios.create({
   withCredentials: true,
 });
 
-// Debug log
-console.log("API Base URL:", API.defaults.baseURL);
+// Debug log with timestamp
+console.log("API Base URL:", API.defaults.baseURL, "at", new Date().toISOString());
 
 export const setAuthToken = (token) => {
   if (token) {
