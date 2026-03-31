@@ -3,10 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from . import models, database, crud, schemas, auth
 
-models.Base.metadata.create_all(bind=database.engine)
 app = FastAPI()
 
-# Add CORS middleware
+# Add CORS middleware FIRST (before any routes)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,6 +13,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Initialize database tables on startup
+@app.on_event("startup")
+def startup():
+    try:
+        models.Base.metadata.create_all(bind=database.engine)
+    except Exception as e:
+        print(f"Warning: Could not create database tables: {e}")
 
 # Dependency
 def get_db():
