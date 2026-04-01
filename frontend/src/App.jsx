@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { login, signup, setAuthToken } from "./api";
-import Skills from "./components/Skills";
 import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
 
@@ -15,10 +14,13 @@ export default function App() {
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
-    if (savedToken) {
-      setToken(savedToken);
-      setAuthToken(savedToken);
+    if (!savedToken || savedToken === "undefined") {
+      localStorage.removeItem("token");
+      return;
     }
+
+    setToken(savedToken);
+    setAuthToken(savedToken);
   }, []);
 
   const handleLogout = () => {
@@ -33,14 +35,17 @@ export default function App() {
     setLoading(true);
 
     try {
-      const data = isLoginMode
-        ? await login({ email, password })
-        : await signup({ username, email, password });
+      if (isLoginMode) {
+        const data = await login({ email, password });
+        const authToken = data.access_token;
 
-      const authToken = data.access_token;
-      setToken(authToken);
-      setAuthToken(authToken);
-      localStorage.setItem("token", authToken);
+        setToken(authToken);
+        setAuthToken(authToken);
+        localStorage.setItem("token", authToken);
+      } else {
+        await signup({ username, email, password });
+        setIsLoginMode(true);
+      }
 
       setEmail("");
       setPassword("");
@@ -49,10 +54,6 @@ export default function App() {
       toast.success(
         isLoginMode ? "خوش آمدید!" : "ثبت‌نام موفقیت‌آمیز، لطفا وارد شوید"
       );
-
-      if (!isLoginMode) {
-        setIsLoginMode(true);
-      }
     } catch (error) {
       const message =
         error?.detail || error?.message || "خطای نامعلوم";
@@ -91,4 +92,3 @@ export default function App() {
     </>
   );
 }
-

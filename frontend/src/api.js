@@ -4,14 +4,11 @@ const API = axios.create({
   baseURL: "https://skill-notes-app.onrender.com",
 });
 
-// Debug log
-console.log("API Base URL:", API.defaults.baseURL, "at", new Date().toISOString());
-
 export const setAuthToken = (token) => {
   if (token) {
-    API.defaults.headers.common["token"] = token;
+    API.defaults.headers.common.Authorization = `Bearer ${token}`;
   } else {
-    delete API.defaults.headers.common["token"];
+    delete API.defaults.headers.common.Authorization;
   }
 };
 
@@ -26,26 +23,19 @@ export async function signup(data) {
 
 export async function login(data) {
   try {
-    const formData = new URLSearchParams();
-    formData.append("username", data.email); 
-    formData.append("password", data.password);
-
-    const res = await API.post("/login", formData, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
+    const res = await API.post("/login", {
+      email: data.email,
+      password: data.password,
     });
-
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
   }
 }
 
-
 export async function getSkills() {
   try {
-    const res = await API.get("/skills");
+    const res = await API.get("/skills/");
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -54,7 +44,7 @@ export async function getSkills() {
 
 export async function createSkill(title) {
   try {
-    const res = await API.post("/skills", { title });
+    const res = await API.post("/skills/", { title });
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -63,7 +53,7 @@ export async function createSkill(title) {
 
 export async function updateSkill(skillId, title) {
   try {
-    const res = await API.put(`/skills/${skillId}`, { title });
+    const res = await API.put(`/skills/${skillId}/`, { title });
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -72,7 +62,7 @@ export async function updateSkill(skillId, title) {
 
 export async function deleteSkill(skillId) {
   try {
-    const res = await API.delete(`/skills/${skillId}`);
+    const res = await API.delete(`/skills/${skillId}/`);
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -81,7 +71,7 @@ export async function deleteSkill(skillId) {
 
 export async function getNotes(skillId) {
   try {
-    const res = await API.get(`/skills/${skillId}/notes`);
+    const res = await API.get(`/skills/${skillId}/notes/`);
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -90,7 +80,7 @@ export async function getNotes(skillId) {
 
 export async function createNote(skillId, content) {
   try {
-    const res = await API.post(`/skills/${skillId}/notes`, { content });
+    const res = await API.post(`/skills/${skillId}/notes/`, { content });
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -99,10 +89,7 @@ export async function createNote(skillId, content) {
 
 export async function updateNote(skillId, noteId, content) {
   try {
-    const res = await API.put(
-      `/skills/${skillId}/notes/${noteId}`,
-      { content }
-    );
+    const res = await API.put(`/skills/${skillId}/notes/${noteId}/`, { content });
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -111,9 +98,7 @@ export async function updateNote(skillId, noteId, content) {
 
 export async function deleteNote(skillId, noteId) {
   try {
-    const res = await API.delete(
-      `/skills/${skillId}/notes/${noteId}`
-    );
+    const res = await API.delete(`/skills/${skillId}/notes/${noteId}/`);
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
