@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://skill-notes-app.onrender.com"
+  baseURL: "https://skill-notes-app.onrender.com",
 });
 
-// Debug log with timestamp
+// Debug log
 console.log("API Base URL:", API.defaults.baseURL, "at", new Date().toISOString());
 
 export const setAuthToken = (token) => {
@@ -26,43 +26,82 @@ export async function signup(data) {
 
 export async function login(data) {
   try {
-    const res = await API.post("/login", data);
-    return res.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-}
+    const formData = new URLSearchParams();
+    formData.append("username", data.email); 
+    formData.append("password", data.password);
 
-export async function getSkills(token) {
-  try {
-    const res = await API.get("/skills/", {
-      headers: { token: token },
+    const res = await API.post("/login", formData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     });
+
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
   }
 }
 
-export async function createSkill(title, token) {
+
+export async function getSkills() {
   try {
-    const res = await API.post(
-      "/skills/",
-      { title },
-      { headers: { token: token } }
-    );
+    const res = await API.get("/skills");
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
   }
 }
 
-export async function updateSkill(skillId, title, token) {
+export async function createSkill(title) {
+  try {
+    const res = await API.post("/skills", { title });
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+}
+
+export async function updateSkill(skillId, title) {
+  try {
+    const res = await API.put(`/skills/${skillId}`, { title });
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+}
+
+export async function deleteSkill(skillId) {
+  try {
+    const res = await API.delete(`/skills/${skillId}`);
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+}
+
+export async function getNotes(skillId) {
+  try {
+    const res = await API.get(`/skills/${skillId}/notes`);
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+}
+
+export async function createNote(skillId, content) {
+  try {
+    const res = await API.post(`/skills/${skillId}/notes`, { content });
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+}
+
+export async function updateNote(skillId, noteId, content) {
   try {
     const res = await API.put(
-      `/skills/${skillId}/`,
-      { title },
-      { headers: { token: token } }
+      `/skills/${skillId}/notes/${noteId}`,
+      { content }
     );
     return res.data;
   } catch (error) {
@@ -70,59 +109,11 @@ export async function updateSkill(skillId, title, token) {
   }
 }
 
-export async function deleteSkill(skillId, token) {
+export async function deleteNote(skillId, noteId) {
   try {
-    const res = await API.delete(`/skills/${skillId}/`, {
-      headers: { token: token },
-    });
-    return res.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-}
-
-export async function getNotes(skillId, token) {
-  try {
-    const res = await API.get(`/skills/${skillId}/notes/`, {
-      headers: { token: token },
-    });
-    return res.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-}
-
-export async function createNote(skillId, content, token) {
-  try {
-    const res = await API.post(
-      `/skills/${skillId}/notes/`,
-      { content },
-      { headers: { token: token } }
+    const res = await API.delete(
+      `/skills/${skillId}/notes/${noteId}`
     );
-    return res.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-}
-
-export async function updateNote(skillId, noteId, content, token) {
-  try {
-    const res = await API.put(
-      `/skills/${skillId}/notes/${noteId}/`,
-      { content },
-      { headers: { token: token } }
-    );
-    return res.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-}
-
-export async function deleteNote(skillId, noteId, token) {
-  try {
-    const res = await API.delete(`/skills/${skillId}/notes/${noteId}/`, {
-      headers: { token: token },
-    });
     return res.data;
   } catch (error) {
     throw error.response?.data || error.message;
