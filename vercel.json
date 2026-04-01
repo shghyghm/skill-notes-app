@@ -1,8 +1,8 @@
 {
-  "buildCommand": "npm install && npm run build",
-  "outputDirectory": "dist",
-  "root": "frontend",
-  "env": {
-    "REACT_APP_API_URL": "https://skill-notes-api.onrender.com"
+  "projects": {
+    "frontend": {
+      "root": "frontend",
+      "package.json": true
+    }
   }
 }
