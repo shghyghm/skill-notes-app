@@ -16,6 +16,8 @@ def create_user(db: Session, username: str, email: str, password: str):
     db.refresh(db_user)
     return db_user
 
+
+
 # --- Skill ---
 def create_skill(db, user_id: int, title: str):
     skill = models.Skill(title=title, owner_id=user_id)
