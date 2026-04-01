@@ -1,8 +1,0 @@
-{
-  "projects": {
-    "frontend": {
-      "root": "frontend",
-      "package.json": true
-    }
-  }
-}
